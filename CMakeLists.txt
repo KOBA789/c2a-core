@@ -11,7 +11,6 @@ set(C2A_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(C2A_SRCS
   c2a_core_main.c
-  git_revision.c
   Drivers/Super/driver_super.c
   Drivers/Super/driver_super_issl_format.c
   System/AnomalyLogger/anomaly_logger.c
