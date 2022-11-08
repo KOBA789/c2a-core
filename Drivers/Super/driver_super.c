@@ -238,11 +238,21 @@ void DS_move_forward_frame_head_candidate_of_stream_rec_buffer_(DS_StreamRecBuff
 
 // ###### DriverSuper基本関数 ######
 
-DS_ERR_CODE DS_init(DriverSuper* p_super, void* if_config, DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super))
+DS_ERR_CODE DS_init(DriverSuper* p_super,
+                    void* if_config,
+                    DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super),
+                    DS_StreamRecBuffer* stream_rec_buffers[DS_STREAM_MAX])
 {
+  uint8_t stream;
+
   if (DS_reset(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;
 
   p_super->if_config = if_config;
+
+  for (stream = 0; stream < DS_STREAM_MAX; ++stream)
+  {
+    DSSC_set_rx_buffer(&p_super->stream_config[stream], stream_rec_buffers[stream]);
+  }
 
   p_super->config.internal.load_init_setting = load_init_setting;
   if (p_super->config.internal.load_init_setting(p_super) != DS_ERR_CODE_OK) return DS_ERR_CODE_ERR;

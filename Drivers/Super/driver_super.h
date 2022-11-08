@@ -416,14 +416,16 @@ struct DriverSuper
  *         そして，構造体内の初期化が必要な変数を初期化する．
  *         デフォルト値の上書きは load_init_setting で行う
  * @note   DriverSuperを使用する時は起動時に必ず実施すること
- * @param  p_super:           初期化するDriverSuper構造体へのポインタ
- * @param  if_config:         初期化するDriverで用いられているIFのconfig構造体
- * @param  load_init_setting: DriverSuperの初期設定ロード関数ポインタ
+ * @param  p_super:            初期化するDriverSuper構造体へのポインタ
+ * @param  if_config:          初期化するDriverで用いられているIFのconfig構造体
+ * @param  load_init_setting:  DriverSuperの初期設定ロード関数ポインタ
+ * @param  stream_rec_buffers: 各 stream に割り当てる rx_buffer．使わない stream は NULL を設定する
  * @return DS_ERR_CODE
  */
 DS_ERR_CODE DS_init(DriverSuper* p_super,
                     void* if_config,
-                    DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super));
+                    DS_ERR_CODE (*load_init_setting)(DriverSuper* p_super),
+                    DS_StreamRecBuffer* stream_rec_buffers[DS_STREAM_MAX]);
 
 /**
  * @brief  DriverSuperのリセット
@@ -610,6 +612,8 @@ DS_ERR_CODE DSSC_get_ret_from_data_analyzer(const DS_StreamConfig* p_stream_conf
 void DS_init_stream_rec_buffer(DS_StreamRecBuffer* stream_rec_buffer,
                                uint8_t* buffer,
                                const uint16_t buffer_capacity);
+
+
 
 /**
  * @brief  DS_DRIVER_ERR_CODE から CCP_CmdRet への変換関数

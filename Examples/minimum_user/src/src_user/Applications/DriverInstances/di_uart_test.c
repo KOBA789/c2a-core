@@ -4,27 +4,26 @@
  * @brief UART と DriverSuper テスト用
  */
 #include "di_uart_test.h"
-
 #include <stddef.h> // for NULL
-
 #include <src_core/Library/print.h>
 #include <src_core/TlmCmd/common_cmd_packet_util.h>
 #include "../../Settings/port_config.h"
+#include "../../Settings/DriverSuper/driver_buffer_define.h"
 
+// FIXME: 接頭辞を DI_UART_TEST に
 
 static UART_TEST_Driver uart_test_instance_;
 const UART_TEST_Driver* uart_test_instance;
 
+// バッファ
+static uint8_t UART_TEST_rx_buffer_allocation_0_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static uint8_t UART_TEST_rx_buffer_allocation_1_[DS_STREAM_REC_BUFFER_SIZE_DEFAULT];
+static DS_StreamRecBuffer UART_TEST_rx_buffer_0_;
+static DS_StreamRecBuffer UART_TEST_rx_buffer_1_;
 
 static void UART_TEST_init_by_AM_(void);
 static void UART_TEST_init_(void);
 static void UART_TEST_update_(void);
-// TODO: 実装する
-// static int  UART_TEST_fill_with_zero_(uint32_t no);
-// static int  UART_TEST_abort_fill_nodata_(uint8_t err);
-// static int  UART_TEST_set_rec_flag_(uint32_t no);
-// static int  UART_TEST_unset_rec_flag_(uint32_t no);
-// static int  UART_TEST_is_rec_flag_up_(uint32_t no);
 
 
 // !!!!!!!!!! 注意 !!!!!!!!!!
@@ -46,7 +45,15 @@ static void UART_TEST_init_(void)
 {
   DS_INIT_ERR_CODE ret;
 
-  ret = UART_TEST_init(&uart_test_instance_, PORT_CH_UART_TEST);
+  DS_init_stream_rec_buffer(&UART_TEST_rx_buffer_0_,
+                            UART_TEST_rx_buffer_allocation_0_,
+                            sizeof(UART_TEST_rx_buffer_allocation_0_));
+  DS_init_stream_rec_buffer(&UART_TEST_rx_buffer_1_,
+                            UART_TEST_rx_buffer_allocation_1_,
+                            sizeof(UART_TEST_rx_buffer_allocation_1_));
+
+
+  ret = UART_TEST_init(&uart_test_instance_, PORT_CH_UART_TEST, &UART_TEST_rx_buffer_0_, &UART_TEST_rx_buffer_1_);
   if (ret != DS_INIT_OK)
   {
     Printf("UART_TEST init Failed! Err:%d \n", ret);

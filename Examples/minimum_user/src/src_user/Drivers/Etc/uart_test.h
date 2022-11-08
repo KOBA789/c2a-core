@@ -38,11 +38,16 @@ typedef struct
  * @brief  UART_TEST初期化
  *
  *         UART_TEST_Driver構造体のポインタを渡すことでポートを初期化し，UART_TEST_Driverの各メンバも初期化する
- * @param  *uart_test_instance : 初期化するUART_TEST_Driver構造体へのポインタ
- * @param  ch    : UART_TESTが接続されているUARTポート番号
+ * @param  uart_test_instance : 初期化するUART_TEST_Driver構造体へのポインタ
+ * @param  ch                 : UART_TESTが接続されているUARTポート番号
+ * @param  rx_buffer0         : stream 0 用のバッファ
+ * @param  rx_buffer1         : stream 1 用のバッファ
  * @return DS_INIT_ERR_CODE
  */
-DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance, unsigned char ch);
+DS_INIT_ERR_CODE UART_TEST_init(UART_TEST_Driver* uart_test_instance,
+                                uint8_t ch,
+                                DS_StreamRecBuffer* rx_buffer0,
+                                DS_StreamRecBuffer* rx_buffer1);
 
 /**
  * @brief  UART_TESTのデータ（テレメ）受信
